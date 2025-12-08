@@ -11,8 +11,6 @@ This project investigates English as a stochastic process modeled using Markov c
 
 This project extends concepts from Lecture 3 (AEP, entropy rate, Markov chains, stationary processes) with empirical experiments on real text.
 
----
-
 ## 2. Objectives
 
 ### Core Objectives
@@ -37,8 +35,6 @@ This project extends concepts from Lecture 3 (AEP, entropy rate, Markov chains, 
 5. Test multiple corpora or multiple languages.
 6. Explore high-order models and sparsity effects.
 
----
-
 ## 3. Hypotheses
 
 ### H1. Higher-order Markov models reduce entropy.
@@ -59,8 +55,6 @@ As k increases, the model captures more context. Expected trend:
 
 ### H4. Lower entropy correlates with better gzip compression ratios.
 
----
-
 ## 4. Dataset
 
 Use any public-domain English text (Project Gutenberg):
@@ -71,8 +65,6 @@ Use any public-domain English text (Project Gutenberg):
 - King James Bible  
 
 Place your chosen file at: data/corpus.txt
-
----
 
 ## 5. Implementation Plan
 
@@ -108,8 +100,6 @@ H = Σ_context π(context) * H(X | context)
 
 H ≈ -(1/n) Σ log2 P(x_i | x_{i-k:i-1})
 
----
-
 ## 6. Extensions
 
 ### E1. Character-level vs Word-level Models
@@ -133,8 +123,6 @@ H_n = -(1/n) log2 P(X_1^n)
 ### E5. Higher-order Models
 Analyze sparsity and overfitting.
 
----
-
 ## 7. Expected Output
 
 ### Tables
@@ -150,8 +138,6 @@ Analyze sparsity and overfitting.
 ### Generated Samples
 Include excerpts for k = 0, 1, 2, 3.
 
----
-
 ## 8. Project Structure
 
 project/
@@ -166,8 +152,6 @@ project/
 │   ├── entropy_plot.png
 │   └── convergence_plot.png
 └── plots/
-
----
 
 ## 9. Code Outline
 
@@ -186,8 +170,6 @@ H_model = estimate_entropy_rate_from_model(sequence, model, k)
 H_seq   = estimate_entropy_rate_from_sequence(sequence, model, k)
 ```
 
-⸻
-
 ## 10. Interpretation Goals
 
 Discuss:
@@ -196,8 +178,6 @@ Discuss:
 	•	how empirical results validate the AEP,
 	•	differences between low and high-order models,
 	•	limitations of Markov chain modeling.
-
-⸻
 
 ## 11. Limitations
 	•	English text is not perfectly stationary.
