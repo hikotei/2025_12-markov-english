@@ -175,14 +175,14 @@ H_seq   = estimate_entropy_rate_from_sequence(sequence, model, k)
 ## 10. Interpretation Goals
 
 Discuss:
-	•	how dependency structure reduces entropy,
-	•	why English is compressible,
-	•	how empirical results validate the AEP,
-	•	differences between low and high-order models,
-	•	limitations of Markov chain modeling.
+- how dependency structure reduces entropy,
+- why English is compressible,
+- how empirical results validate the AEP,
+- differences between low and high-order models,
+- limitations of Markov chain modeling.
 
 ## 11. Limitations
-	•	English text is not perfectly stationary.
-	•	High-order models suffer from sparse statistics.
-	•	Markov models capture local but not global structure.
-	•	True entropy rate is lower than these simple estimates.
+- English text is not perfectly stationary.
+- High-order models suffer from sparse statistics.
+- Markov models capture local but not global structure.
+- True entropy rate is lower than these simple estimates.
