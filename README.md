@@ -1,4 +1,4 @@
-# Markov Chain Modeling of English Text & Entropy Rate Estimation
+# English Text as Markov Chain & Entropy Rate
 
 ## 1. Project Overview
 
