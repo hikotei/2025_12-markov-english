@@ -140,6 +140,7 @@ Include excerpts for k = 0, 1, 2, 3.
 
 ## 8. Project Structure
 
+```
 project/
 │
 ├── README.md
@@ -152,6 +153,7 @@ project/
 │   ├── entropy_plot.png
 │   └── convergence_plot.png
 └── plots/
+```
 
 ## 9. Code Outline
 
