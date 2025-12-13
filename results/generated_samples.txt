@@ -1,0 +1,74 @@
+--- Level: char, Punct: False, Order: 0 ---
+ut nwshytn htelsoagefci  i  oa l h  oyit lwa u ta o  teetp odnoa aeu hsleetesngd t i n t  att fddo eedusd u  flth ah at oftn lsltney oaao dlous ollero  hnitttn  oit slrkhnota  oohdeetopyaheldua eamevt
+
+--- Level: char, Punct: False, Order: 1 ---
+re hro burt ttinge theridyoveale lild lowane t f okerurkethey s asthe an h a paie isllishithem s t sherimm o y te aboidg aichery d t s outhakit ly w lili aga icke sakerser bof serdre bing g mamid amad
+
+--- Level: char, Punct: False, Order: 2 ---
+cromerench the saway come pap oh ming did twon thin alle iso thing aged itstlearmocke that a fam ouldnt ext inkinto al you kno ind as saing waspock seer itileven wound broome says slow satersed even sel
+
+--- Level: char, Punct: False, Order: 3 ---
+body ill the the had she were next mark out in it waite old with the fix in a ver eat a down didly in all thater ives the just one timiddle alive had the king turtle game to said as lated it it asleeping
+
+--- Level: char, Punct: False, Order: 4 ---
+ury of herself the hatter took of break again the kept her eye felt the quite a watch his she hatter hearts without for feared head went one of life in whats eye children anothing stop of hands as that im
+
+--- Level: char, Punct: True, Order: 0 ---
+  so`tcr iddei ly'ng-eo ftieoqh sp le e erwm ,n 'mraib site
+nhwh't g `,fym t t
+c-ac ,r tn:b
+ drlclnhoer r re , aalherey!n ratyodeets-  aieate
+h ste nr,rhihyl
+o  chelpsjodo dg iopsce ef]u lf tfilt s
+
+--- Level: char, Punct: True, Order: 1 ---
+r fus gathi' `o for  out sng   hi ben.
+f the  `a tilicu anditund
+ad,
+g.'t of tholithe  tlof `wintoucidome d ie bbous a  he--he thentshe waid. inca ledoucenuthifooue w?'mbyonkiccof, aid s bu-'
+
+ remed a
+
+--- Level: char, Punct: True, Order: 2 ---
+mblice, and song, `if twim eve ity, oh,
+ing of is jawas gonexplanxishe crock agettimardeadn't he enowerse do me ging
+his astied the queento thavere staid shemaid its feenee arcle wor and thed mover only
+
+--- Level: char, Punct: True, Order: 3 ---
+m because beginnel dodo thoutes impanted oute e--'
+
+      ching of the dishookinged
+throw up
+and top of talking to fore,' the who was voices.'
+
+  the reat
+won't king the king?'
+
+  `which they say stolden
+
+--- Level: char, Punct: True, Order: 4 ---
+t
+manage from the patter was general
+conclusion.'  and just remarked;
+`only to she speak?'
+
+  `a knife.  `i've got stamping of the were were was the
+deeped herself haven't expresented the raving frontinue
+
+--- Level: word, Punct: False, Order: 0 ---
+rather you settled a herself to esq but spoke eeevening wore and game poor good out went by himself the quite and gently i hatters as cries get a and made all the looked said was mouse nine an choice if out to to the to say pressed were she
+
+--- Level: word, Punct: False, Order: 1 ---
+saythats the jury all stopped hastily dried her head down to remark myself to look alices shoulder as much larger sir just as its a rabbit coming it and when the chimney close behind she said alice said to her arms round to say a bright idea what was pressed so
+
+--- Level: word, Punct: False, Order: 2 ---
+you werent to talk to how are you talking to said the hatter alice felt a very hopeful tone though i wont thenbills to go let me seehow is it would twist itself round and round alice every now and then nodded its no business of mine the less there is of
+
+--- Level: word, Punct: True, Order: 0 ---
+happen to of you a day this other herself , ' , , . as a begin little it ' w place those the her we queen , , changes was little on alice be till name to the the question beautify something a to said any would and then
+
+--- Level: word, Punct: True, Order: 1 ---
+usurpation and the wood , and get to alice and dogs ? ' then it doesn't look up into a remarkable in reply . ' continued , and sometimes she set the duchess ! oh , ' cried so kind to a whiting ! either question is ! wow ! quick
+
+--- Level: word, Punct: True, Order: 2 ---
+officers of the birds and animals that had fluttered down from the sky all the while , however , at all , ' he unfolded the paper . if i had not gone we know it to make out exactly what they will do , to see if there are no mice
