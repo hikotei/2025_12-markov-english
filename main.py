@@ -10,8 +10,8 @@ def run_experiments():
     configs = [
         {'level': 'char', 'keep_punct': False, 'orders': [0, 1, 2, 3, 4]},
         {'level': 'char', 'keep_punct': True,  'orders': [0, 1, 2, 3, 4]},
-        {'level': 'word', 'keep_punct': False, 'orders': [0, 1, 2]},
-        {'level': 'word', 'keep_punct': True,  'orders': [0, 1, 2]}
+        {'level': 'word', 'keep_punct': False, 'orders': [0, 1, 2, 3, 4]},
+        {'level': 'word', 'keep_punct': True,  'orders': [0, 1, 2, 3, 4]}
     ]
 
     results = []

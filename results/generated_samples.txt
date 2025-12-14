@@ -1,74 +1,91 @@
 --- Level: char, Punct: False, Order: 0 ---
-ut nwshytn htelsoagefci  i  oa l h  oyit lwa u ta o  teetp odnoa aeu hsleetesngd t i n t  att fddo eedusd u  flth ah at oftn lsltney oaao dlous ollero  hnitttn  oit slrkhnota  oohdeetopyaheldua eamevt
+ nncs oafa  s hiw dhwdnaeahtuf haideflfs t v ieiasi hd ali sbnrtslssr  kwfhdiia dtyo   nosoe  h an  iieare  h ilfly l oo nd o twxai  leeip r rtns astase nneeeiuhniifq tsyharghtltfymnkuet tr ttb t yr a
 
 --- Level: char, Punct: False, Order: 1 ---
-re hro burt ttinge theridyoveale lild lowane t f okerurkethey s asthe an h a paie isllishithem s t sherimm o y te aboidg aichery d t s outhakit ly w lili aga icke sakerser bof serdre bing g mamid amad
+ate ysne as nd chiclangod mo rrer shinido n ar t len s anowoupyot r nd wen tenere ins terayerureacomokixpond rsestofi santhe ju gherouthe inghad tupo s ghi wh the t tr s herlincaise ieg s rdid tshensof
 
 --- Level: char, Punct: False, Order: 2 ---
-cromerench the saway come pap oh ming did twon thin alle iso thing aged itstlearmocke that a fam ouldnt ext inkinto al you kno ind as saing waspock seer itileven wound broome says slow satersed even sel
+gforyphould lit isher for to the se of threepeal he cousenchou ke mark there it alselself wed the the sh sheriethey sing oreme begaid if a cre why quithe crome the ort of ful off to up a lown what wed v
 
 --- Level: char, Punct: False, Order: 3 ---
-body ill the the had she were next mark out in it waite old with the fix in a ver eat a down didly in all thater ives the just one timiddle alive had the king turtle game to said as lated it it asleeping
+o me more queen head if you not at as she word his it nothe said the the can the madedly you cook ture here thatter dormoutoff anxiouse doubtful zigzag willar and one enought to get minings despeaking ab
 
 --- Level: char, Punct: False, Order: 4 ---
-ury of herself the hatter took of break again the kept her eye felt the quite a watch his she hatter hearts without for feared head went one of life in whats eye children anothing stop of hands as that im
+oung close the play cross tallest explain sigh her own only because of it is was out chin his so herself to pleasant alices at made and the tarts the said the duchess she queen want to caller and of its t
 
 --- Level: char, Punct: True, Order: 0 ---
-  so`tcr iddei ly'ng-eo ftieoqh sp le e erwm ,n 'mraib site
-nhwh't g `,fym t t
-c-ac ,r tn:b
- drlclnhoer r re , aalherey!n ratyodeets-  aieate
-h ste nr,rhihyl
-o  chelpsjodo dg iopsce ef]u lf tfilt s
+tmfeinaet tdv iwtae  ot .hrsiw h  wofrterem, whhl
+'o  h nlad ko rias o largxteywsdesaoav
+oa rhlit n   oemoukooeseoifln `no vphdoduc`a nde whdaevie llavo odbmce  atr setve!aoin
+doroe ekrlo o u ta
+ih sg
 
 --- Level: char, Punct: True, Order: 1 ---
-r fus gathi' `o for  out sng   hi ben.
-f the  `a tilicu anditund
-ad,
-g.'t of tholithe  tlof `wintoucidome d ie bbous a  he--he thentshe waid. inca ledoucenuthifooue w?'mbyonkiccof, aid s bu-'
+-sairerd t, tot, ve the endedale huthullfomangoverpp, retasiome t sat  artor w,). t llis  te thiman hrat y  a teas,'theye ay
 
- remed a
+ yorell phice nche harangarat-the ce  cok
+
+
+hice `as
+se athapast oury jucen
 
 --- Level: char, Punct: True, Order: 2 ---
-mblice, and song, `if twim eve ity, oh,
-ing of is jawas gonexplanxishe crock agettimardeadn't he enowerse do me ging
-his astied the queento thavere staid shemaid its feenee arcle wor and thed mover only
+frepegareat theyes.'
+
+   `of they ch crupok to self, a mad ve as thes.     `offelf and alice.'
+
+  `i'ved turasky alit she on.
+
+  and of the's to brit, be.   `your rally,
+coul way be poo re oved yought l
 
 --- Level: char, Punct: True, Order: 3 ---
-m because beginnel dodo thoutes impanted oute e--'
+bdued the seemed betted of your of a litter her
+footmany were ching be days please fixed shried manythis call execution,
+plaime.
 
-      ching of the dishookinged
-throw up
-and top of talking to fore,' the who was voices.'
+  alice.
 
-  the reat
-won't king the king?'
 
-  `which they say stolden
+
+
+  `why no diffend,
+  `what at size?  all her:  `thatterburse
 
 --- Level: char, Punct: True, Order: 4 ---
-t
-manage from the patter was general
-conclusion.'  and just remarked;
-`only to she speak?'
+stiff.  `do cat remark, will speak--and she whispered.'
 
-  `a knife.  `i've got stamping of the were were was the
-deeped herself haven't expresented the raving frontinue
+  `swimming tone of ther minute or somebody to by throat!' said not likely that dare your majesty melanches.
+
+  `how fallest tried over of the mark
 
 --- Level: word, Punct: False, Order: 0 ---
-rather you settled a herself to esq but spoke eeevening wore and game poor good out went by himself the quite and gently i hatters as cries get a and made all the looked said was mouse nine an choice if out to to the to say pressed were she
+if matters skurried must may a i perfectly with long or shouting said the here loud it but patiently alice the always youve in answer baby of what to till came duchess was dry its above into tone not that howling and it come said me out quite there a
 
 --- Level: word, Punct: False, Order: 1 ---
-saythats the jury all stopped hastily dried her head down to remark myself to look alices shoulder as much larger sir just as its a rabbit coming it and when the chimney close behind she said alice said to her arms round to say a bright idea what was pressed so
+pigeon i did with pink eyes very curious as it had never said the cat remarked the dodo in a red rosetree she sat silent for i wonder she ran round the twentieth time of very deep and the while the duck its a thing said the blame on with the
 
 --- Level: word, Punct: False, Order: 2 ---
-you werent to talk to how are you talking to said the hatter alice felt a very hopeful tone though i wont thenbills to go let me seehow is it would twist itself round and round alice every now and then nodded its no business of mine the less there is of
+out you know and he called the queen left off sneezing by this time youre nothing but outoftheway things had happened lately that alice said nothing perhaps it was said the caterpillar well perhaps your feelings may be different said alice very humbly you had been broken to pieces please then said
+
+--- Level: word, Punct: False, Order: 3 ---
+just at first the two creatures got so close to her ear youre thinking about something my dear and that makes you forget to talk i cant tell you just now what the moral of that is but i shall remember it in a few minutes she heard a little animal she couldnt
+
+--- Level: word, Punct: False, Order: 4 ---
+she was surprised to find quite a large crowd collected round it there was a dispute going on between the executioner the king and the executioner ran wildly up and down looking for it while the rest of the party went back to the table half hoping she might find another key on it
 
 --- Level: word, Punct: True, Order: 0 ---
-happen to of you a day this other herself , ' , , . as a begin little it ' w place those the her we queen , , changes was little on alice be till name to the the question beautify something a to said any would and then
+fetch position she suppose and to had closed . and about the at from they're ! said answer once , hatter nothing inquired of might in , said , knew unpleasant any said tell thing ' was turtle might like may usual i ' know feet queen now little queen
 
 --- Level: word, Punct: True, Order: 1 ---
-usurpation and the wood , and get to alice and dogs ? ' then it doesn't look up into a remarkable in reply . ' continued , and sometimes she set the duchess ! oh , ' cried so kind to a whiting ! either question is ! wow ! quick
+today . the queen's croquet . sixteenth , ' said alice began : she was looking round her very glad i hope it'll sit down , and eaten up again , sir , ' alice , and , when you know what to find that . the jelly fish came between
 
 --- Level: word, Punct: True, Order: 2 ---
-officers of the birds and animals that had fluttered down from the sky all the while , however , at all , ' he unfolded the paper . if i had not gone we know it to make out exactly what they will do , to see if there are no mice
+grown woman ; and alice thought to herself , i fancy who's to go and get ready to talk nonsense , ' said the caterpillar angrily , rearing itself upright as it spoke . a knot ! ' said the king laid his hand upon her knee , while the owl had
+
+--- Level: word, Punct: True, Order: 3 ---
+and looked at alice . it goes on they all returned from him to you , though they were mine before . if i don't take this child away with me , ' said the caterpillar . well , i've tried to say how doth the little ' and she tried to curtsey
+
+--- Level: word, Punct: True, Order: 4 ---
+again : ou est ma chatte ? ' which was the first sentence in her french lesson book . the mouse gave a sudden leap out of the water , and seemed to quiver all over with fright . oh , i beg your pardon , ' said alice doubtfully : it means to
+
