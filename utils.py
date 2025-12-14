@@ -5,11 +5,132 @@ import re
 import zlib
 import string
 
+
 def load_text(filepath):
-    with open(filepath, 'r', encoding='utf-8') as f:
+    with open(filepath, "r", encoding="utf-8") as f:
         return f.read()
 
-def clean_text(text, level='char', keep_punctuation=False):
+
+# ORIGINAL
+# def clean_text(text, level="char", keep_punctuation=False):
+#     """
+#     Preprocesses text.
+#     level: 'char' or 'word'
+#     keep_punctuation: bool
+#     Returns: list of tokens
+#     """
+#     text = text.lower()
+
+#     # Define allowed characters
+#     if keep_punctuation:
+#         # Allow letters, numbers, and standard punctuation
+#         # For simplicity, let's keep basic ascii punctuation and spaces
+#         allowed = set(
+#             string.ascii_lowercase + string.digits + string.punctuation + " \n\t"
+#         )
+#     else:
+#         # Strict: only a-z and space
+#         allowed = set(string.ascii_lowercase + " ")
+#         text = text.replace("\n", " ").replace(
+#             "\t", " "
+#         )  # normalize whitespace for strict mode
+
+#     # Filter characters for both modes initially to clean up weird stuff
+#     # But for word mode, we might want to do regex split instead
+
+#     if level == "char":
+#         # Filter char by char
+#         cleaned = [c for c in text if c in allowed]
+#         # Collapse multiple spaces if strict? The user didn't say, but it helps coherence.
+#         # Let's just join them.
+#         cleaned_str = "".join(cleaned)
+#         if not keep_punctuation:
+#             cleaned_str = re.sub(r"\s+", " ", cleaned_str).strip()
+#         return list(cleaned_str)
+
+#     elif level == "word":
+#         if keep_punctuation:
+#             # Tokenize: words and punctuation are separate tokens
+#             # regex: capture words or non-whitespace characters
+#             # This is a simple tokenizer
+#             tokens = re.findall(r"[\w']+|[.,!?;:]", text)
+#             return tokens
+#         else:
+#             # Remove punctuation, split by whitespace
+#             # First replace punctuation with nothing (or space?)
+#             # Usually strict word model removes punctuation.
+#             cleaned_str = re.sub(r"[^a-z\s]", "", text)
+#             tokens = cleaned_str.split()
+#             return tokens
+
+#     return []
+
+# REVISED to keep linebreaks
+# def clean_text(text, level="char", keep_punctuation=False):
+#     """
+#     Preprocesses text.
+#     level: 'char' or 'word'
+#     keep_punctuation: bool
+#     Returns: list of tokens
+#     """
+#     text = text.lower()
+
+#     # Define allowed characters
+#     if keep_punctuation:
+#         # Allow letters, numbers, and standard punctuation, plus \n and \t
+#         allowed = set(
+#             string.ascii_lowercase + string.digits + string.punctuation + " \n\t"
+#         )
+#     else:
+#         # Strict: only a-z and space
+#         allowed = set(string.ascii_lowercase + " ")
+#         text = text.replace("\n", " ").replace(
+#             "\t", " "
+#         )  # normalize whitespace for strict mode
+
+#     if level == "char":
+#         cleaned = [c for c in text if c in allowed]
+
+#         if keep_punctuation:
+#             # FIX: Preserve all characters as tokens, including \n and \t, by returning the list directly
+#             return cleaned
+#         else:
+#             # For strict char mode, join and then normalize spaces
+#             cleaned_str = "".join(cleaned)
+#             cleaned_str = re.sub(r"\s+", " ", cleaned_str).strip()
+#             return list(cleaned_str)
+
+#     elif level == "word":
+#         if keep_punctuation:
+#             # FIX: Explicitly include \n and \t as distinct tokens in the regex capture group
+#             text = text.replace(
+#                 "\t", "\n"
+#             )  # Treat tabs like newlines for simplicity in modeling breaks
+
+#             # The pattern is: [Words] OR [\n] OR [Other Punctuation]
+#             tokens = re.findall(r"[\w']+|\n|[.,!?;:\"()]", text)
+
+#             return tokens
+#         else:
+#             # Strict word mode: remove punctuation, split by whitespace
+#             cleaned_str = re.sub(r"[^a-z\s]", "", text)
+#             tokens = cleaned_str.split()
+#             return tokens
+
+#     return []
+
+
+# Helper function for simplification
+def simplify_newlines(text):
+    """
+    Replaces sequences of one or more newline characters (\n) with a single newline.
+    """
+    # This regex substitutes two or more newlines with a single newline.
+    return re.sub(r"\n+", "\n", text)
+
+
+# REVISED to only keep simple punctuation . , \n
+def clean_text(text, level="char", keep_punctuation=False):
     """
     Preprocesses text.
     level: 'char' or 'word'
@@ -18,45 +139,75 @@ def clean_text(text, level='char', keep_punctuation=False):
     """
     text = text.lower()
 
-    # Define allowed characters
-    if keep_punctuation:
-        # Allow letters, numbers, and standard punctuation
-        # For simplicity, let's keep basic ascii punctuation and spaces
-        allowed = set(string.ascii_lowercase + string.digits + string.punctuation + " \n\t")
-    else:
-        # Strict: only a-z and space
-        allowed = set(string.ascii_lowercase + " ")
-        text = text.replace('\n', ' ').replace('\t', ' ') # normalize whitespace for strict mode
+    # Define the simple punctuation set: . , \n (and space, always)
+    SIMPLE_PUNCTUATION = {".", ",", "\n"}
 
-    # Filter characters for both modes initially to clean up weird stuff
-    # But for word mode, we might want to do regex split instead
-
-    if level == 'char':
-        # Filter char by char
-        cleaned = [c for c in text if c in allowed]
-        # Collapse multiple spaces if strict? The user didn't say, but it helps coherence.
-        # Let's just join them.
-        cleaned_str = "".join(cleaned)
-        if not keep_punctuation:
-            cleaned_str = re.sub(r'\s+', ' ', cleaned_str).strip()
-        return list(cleaned_str)
-
-    elif level == 'word':
+    # --- Character Level ---
+    if level == "char":
         if keep_punctuation:
-            # Tokenize: words and punctuation are separate tokens
-            # regex: capture words or non-whitespace characters
-            # This is a simple tokenizer
-            tokens = re.findall(r"[\w']+|[.,!?;:]", text)
-            return tokens
+            # 1. Filtering and cleaning
+            allowed = set(string.ascii_lowercase + string.digits + " \n\t").union(
+                {".", ","}
+            )
+            # Consolidate tabs into newlines
+            text = text.replace("\t", "\n")
+
+            # Filter all characters to only keep allowed ones
+            cleaned = [
+                c
+                for c in text
+                if c in allowed
+                and c not in set(string.punctuation) - SIMPLE_PUNCTUATION
+            ]
+
+            # 2. Simplification of multiple newlines
+            cleaned_str = "".join(cleaned)
+            cleaned_str = simplify_newlines(
+                cleaned_str
+            )  # <<< NEWLINE SIMPLIFICATION APPLIED HERE
+
+            # Return the list of characters directly, preserving '\n' as a token
+            return list(cleaned_str)  # Convert back to list of character tokens
+
         else:
-            # Remove punctuation, split by whitespace
-            # First replace punctuation with nothing (or space?)
-            # Usually strict word model removes punctuation.
-            cleaned_str = re.sub(r'[^a-z\s]', '', text)
+            # Strict: only a-z and space
+            allowed = set(string.ascii_lowercase + " ")
+            text = text.replace("\n", " ").replace("\t", " ")
+            cleaned = [c for c in text if c in allowed]
+            cleaned_str = "".join(cleaned)
+            cleaned_str = re.sub(r"\s+", " ", cleaned_str).strip()
+            return list(cleaned_str)
+
+    # --- Word Level ---
+    elif level == "word":
+        if keep_punctuation:
+            text = text.lower()
+
+            # B. Remove all punctuation *except* . and ,
+            all_punc_to_remove = set(string.punctuation) - {".", ","}
+            punc_pattern = r"[" + re.escape("".join(all_punc_to_remove)) + r"]"
+            text = re.sub(punc_pattern, " ", text)
+
+            # C. Replace all tabs with a single space (or \n if you want to model \t as \n)
+            text = text.replace("\t", " ")
+
+            # 1. Simplification of multiple newlines
+            text = simplify_newlines(text)  # <<< NEWLINE SIMPLIFICATION APPLIED HERE
+
+            # D. Use findall to explicitly capture our desired tokens.
+            tokens = re.findall(r"[\w']+|\n|\.|\,", text)
+
+            # E. Filter out any remaining single space tokens or empty strings that might result from the regex
+            return [t for t in tokens if t.strip() or t == "\n"]
+
+        else:
+            # Strict word mode: remove punctuation, split by whitespace
+            cleaned_str = re.sub(r"[^a-z\s]", "", text)
             tokens = cleaned_str.split()
             return tokens
 
     return []
+
 
 def split_chapters(text):
     """
@@ -67,23 +218,24 @@ def split_chapters(text):
     # We look for CHAPTER followed by something, until the next CHAPTER or end.
 
     # This regex looks for CHAPTER followed by Roman numerals or numbers
-    pattern = r'(CHAPTER\s+[IVXLC0-9]+.*?)(?=CHAPTER\s+[IVXLC0-9]+|$)'
+    pattern = r"(CHAPTER\s+[IVXLC0-9]+.*?)(?=CHAPTER\s+[IVXLC0-9]+|$)"
     # The text might have "CHAPTER I" ... content ... "CHAPTER II"
     # re.split includes the delimiter if capturing group is used, which complicates things.
     # Let's try finding all start indices.
 
-    matches = list(re.finditer(r'CHAPTER\s+[IVXLC0-9]+', text, re.IGNORECASE))
+    matches = list(re.finditer(r"CHAPTER\s+[IVXLC0-9]+", text, re.IGNORECASE))
 
     if not matches:
-        return [text] # No chapters found, return whole text
+        return [text]  # No chapters found, return whole text
 
     chapters = []
     for i in range(len(matches)):
         start = matches[i].start()
-        end = matches[i+1].start() if i + 1 < len(matches) else len(text)
+        end = matches[i + 1].start() if i + 1 < len(matches) else len(text)
         chapters.append(text[start:end])
 
     return chapters
+
 
 def build_ngram_counts(tokens, order):
     """
@@ -100,11 +252,12 @@ def build_ngram_counts(tokens, order):
 
     # For order > 0
     for i in range(len(tokens) - order):
-        context = tuple(tokens[i : i+order])
-        next_token = tokens[i+order]
+        context = tuple(tokens[i : i + order])
+        next_token = tokens[i + order]
         counts[context][next_token] += 1
 
     return counts
+
 
 def normalize_to_probs(counts):
     """
@@ -114,8 +267,69 @@ def normalize_to_probs(counts):
     model = {}
     for context, counter in counts.items():
         total = sum(counter.values())
-        model[context] = { token: count/total for token, count in counter.items() }
+        model[context] = {
+            token: round(count / total, 4) for token, count in counter.items()
+        }
     return model
+
+
+def print_model_statistics(counts, order):
+    """
+    Calculates and prints key statistics from the N-gram counts dictionary.
+
+    Args:
+        counts (dict): The dictionary returned by build_ngram_counts.
+        order (int): The order of the N-gram model (e.g., 2 for bigram).
+    """
+    if not counts:
+        print("\n--- Model Statistics ---")
+        print("The model is empty.")
+        return
+
+    # Total number of unique contexts (keys in the top level dictionary)
+    num_contexts = len(counts)
+
+    # Total number of observed N-grams (observations/transitions)
+    # This is the sum of all counts in all inner counters.
+    total_observations = sum(sum(counter.values()) for counter in counts.values())
+
+    # Vocabulary size (V): total number of unique next tokens found across all contexts
+    # This is often done globally, but here we estimate the unique next tokens.
+    # To get the full vocabulary (all unique tokens used anywhere in the text),
+    # we would need the original 'tokens' list.
+    # Since we only have 'counts', we calculate the size of the *conditional* vocabulary.
+
+    # Calculate the size of the conditional vocabulary (V_cond)
+    unique_tokens = set()
+    for counter in counts.values():
+        unique_tokens.update(counter.keys())
+
+    conditional_vocab_size = len(unique_tokens)
+
+    # Number of unique N-grams (V_N): the number of unique (context, next_token) pairs
+    unique_n_grams = sum(len(counter) for counter in counts.values())
+
+    # Prepare statistics for printing
+    stats = [
+        ("Order of N-gram Model (N)", order),
+        ("Number of Unique Contexts", num_contexts),
+        ("Total Observed N-grams (Transitions)", total_observations),
+        ("Unique (Context, Token) N-grams", unique_n_grams),
+        ("Conditional Vocab Size (Next Tokens)", conditional_vocab_size),
+    ]
+
+    # Find the max len of the label strings for alignment
+    max_label_len = max(len(label) for label, _ in stats) + 1
+
+    print("\n----- Model Statistics -----")
+    # 3. Print the statistics using f-string padding and formatting
+    for label, value in stats:
+        # Use < for left alignment of the label, padded to max_label_len
+        # Use :, for comma separated thousands for the value
+        # Using LaTeX for labels as requested in your profile
+        # Use an f-string for the whole output
+        print(f"{label:<{max_label_len}}: {value:,}")
+
 
 def generate_text(model, order, length, seed_context=None):
     """
@@ -156,6 +370,7 @@ def generate_text(model, order, length, seed_context=None):
 
     return generated
 
+
 def calculate_entropy_model(model):
     """
     Calculates theoretical entropy rate of the Markov model.
@@ -174,11 +389,17 @@ def calculate_entropy_model(model):
     Let's implement: H = - Sum ( P(context) * Sum( P(x|context) * log2 P(x|context) ) )
     We need P(context). The empirical probability of context in the source text is the best estimator.
     """
+
+    # Q = maybe i can use external word frequencies obtained from smwhere in the internet
+    # and then weight the contexts by that ?
+
     # This function is hard to implement correctly without the source counts to weight the contexts.
     # I'll modify the approach:
     #   Calculate conditional entropy for each context.
     #   Weight by occurence of that context.
+
     pass
+
 
 def calculate_entropy_from_counts(counts):
     """
@@ -200,6 +421,7 @@ def calculate_entropy_from_counts(counts):
 
     return entropy
 
+
 def calculate_nll(sequence, model, order):
     """
     Calculates Negative Log Likelihood (per symbol) on a sequence using the model.
@@ -218,11 +440,11 @@ def calculate_nll(sequence, model, order):
 
     for i in range(len(sequence) - order):
         if order > 0:
-            context = tuple(sequence[i : i+order])
+            context = tuple(sequence[i : i + order])
         else:
             context = ()
 
-        next_token = sequence[i+order]
+        next_token = sequence[i + order]
 
         if context in model and next_token in model[context]:
             prob = model[context][next_token]
@@ -234,6 +456,7 @@ def calculate_nll(sequence, model, order):
 
     return -log_prob_sum / n
 
+
 def calculate_gzip_ratio(original_text):
     """
     Returns compressed_size / original_size
@@ -241,7 +464,7 @@ def calculate_gzip_ratio(original_text):
     if not original_text:
         return 0.0
 
-    original_bytes = original_text.encode('utf-8')
+    original_bytes = original_text.encode("utf-8")
     compressed_bytes = zlib.compress(original_bytes)
 
     return len(compressed_bytes) / len(original_bytes)
