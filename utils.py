@@ -3,6 +3,7 @@ import math
 import zlib
 import time
 import string
+import jieba
 import random
 import collections
 from tqdm import tqdm
@@ -64,6 +65,40 @@ def clean_text(text, level="char", keep_punctuation=False):
             cleaned_str = re.sub(r"[^a-z\s]", "", text)
             tokens = cleaned_str.split()
             return tokens
+
+    return []
+
+
+def is_han(char):
+    """Checks if a character is a CJK Unified Ideograph."""
+    return '\u4e00' <= char <= '\u9fff'
+
+
+def clean_text_cn(text, level="char", keep_punctuation=False):
+    """
+    Preprocesses Chinese text.
+    level: 'char' or 'word'
+    keep_punctuation: bool
+    Returns: list of tokens
+    """
+    if level == "char":
+        if keep_punctuation:
+            # Keep all characters including punctuation and whitespace
+            return list(text)
+        else:
+            # Strict mode: Only Han characters
+            return [c for c in text if is_han(c)]
+
+    elif level == "word":
+        # Use jieba for segmentation
+        tokens = jieba.lcut(text)
+
+        if keep_punctuation:
+            # Keep all tokens
+            return tokens
+        else:
+            # Strict mode: Filter to keep only tokens containing at least one Han character
+            return [token for token in tokens if any(is_han(c) for c in token)]
 
     return []
 
