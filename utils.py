@@ -1,10 +1,12 @@
-import math
-import collections
-import random
 import re
+import math
 import zlib
+import time
 import string
 import jieba
+import random
+import collections
+from tqdm import tqdm
 
 
 def load_text(filepath):
@@ -218,7 +220,7 @@ def split_chapters(text):
     return chapters
 
 
-def build_ngram_counts(tokens, order):
+def build_ngram_counts(tokens, order, show_pb=False, print_stats=False):
     """
     Builds counts of next_token given context of size 'order'.
     Returns: dict { context_tuple: { next_token: count } }
@@ -232,10 +234,17 @@ def build_ngram_counts(tokens, order):
         return counts
 
     # For order > 0
-    for i in range(len(tokens) - order):
+    start_time = time.time()
+    for i in (
+        tqdm(range(len(tokens) - order)) if show_pb else range(len(tokens) - order)
+    ):
         context = tuple(tokens[i : i + order])
         next_token = tokens[i + order]
         counts[context][next_token] += 1
+    elapsed = time.time() - start_time
+
+    if print_stats:
+        print_model_statistics(counts, order, elapsed)
 
     return counts
 
@@ -248,13 +257,11 @@ def normalize_to_probs(counts):
     model = {}
     for context, counter in counts.items():
         total = sum(counter.values())
-        model[context] = {
-            token: round(count / total, 4) for token, count in counter.items()
-        }
+        model[context] = {token: count / total for token, count in counter.items()}
     return model
 
 
-def print_model_statistics(counts, order):
+def print_model_statistics(counts, order, elapsed=None):
     """
     Calculates and prints key statistics from the N-gram counts dictionary.
 
@@ -293,6 +300,7 @@ def print_model_statistics(counts, order):
     # Prepare statistics for printing
     stats = [
         ("Order of N-gram Model (N)", order),
+        ("Computation Time (s)", round(elapsed, 3) if elapsed is not None else "N/A"),
         ("Number of Unique Contexts", num_contexts),
         ("Total Observed N-grams (Transitions)", total_observations),
         ("Unique (Context, Token) N-grams", unique_n_grams),
@@ -403,7 +411,7 @@ def calculate_entropy_from_counts(counts):
     return entropy
 
 
-def calculate_nll(sequence, model, order):
+def calculate_nll(sequence, model, order, eps=1e-10):
     """
     Calculates Negative Log Likelihood (per symbol) on a sequence using the model.
     H ≈ - (1/N) * Sum( log2 P(x_i | context_i) )
@@ -411,13 +419,9 @@ def calculate_nll(sequence, model, order):
     n = 0
     log_prob_sum = 0.0
 
-    # We can only evaluate where we have a full context and the transition exists
-    # If transition is missing (zero prob), it blows up (infinity).
-    # Usually we smooth or ignore. For this exercise, simple ignoring or epsilon?
-    # README says "Empirical negative log-likelihood".
-    # We will skip transitions that have 0 probability in the model (which means they weren't in training).
-    # Ideally we evaluate on the TRAINING set (to check model entropy) or TEST set.
-    # If evaluating on training set, 0 prob shouldn't happen.
+    # If transition is missing (zero prob), log(0) blows up to infinity
+    # Usually we smooth or take epsilon
+    # If evaluating on training set, 0 prob shouldn't happen
 
     for i in range(len(sequence) - order):
         if order > 0:
@@ -429,6 +433,8 @@ def calculate_nll(sequence, model, order):
 
         if context in model and next_token in model[context]:
             prob = model[context][next_token]
+            if prob <= 0:
+                prob = eps
             log_prob_sum += math.log2(prob)
             n += 1
 
@@ -449,3 +455,63 @@ def calculate_gzip_ratio(original_text):
     compressed_bytes = zlib.compress(original_bytes)
 
     return len(compressed_bytes) / len(original_bytes)
+
+
+def get_vocabulary_size(counts):
+    """
+    Calculates the size of the full vocabulary (V) based on the N-gram counts.
+    V includes all unique tokens that appear as a context token or a next token.
+    """
+    vocabulary = set()
+
+    # Add tokens from contexts (if order > 0)
+    for context in counts.keys():
+        if isinstance(context, tuple):  # For order > 0
+            vocabulary.update(context)
+        elif (
+            context == ()
+        ):  # For order 0 (unigram), context is empty tuple, only next tokens matter
+            pass
+
+    # Add tokens from next_token counters
+    for counter in counts.values():
+        vocabulary.update(counter.keys())
+
+    return len(vocabulary)
+
+
+def calculate_redundancy_model(counts, entropy_rate):
+    """
+    Calculates the redundancy of the source based on the N-gram model's entropy.
+
+    Args:
+        counts (dict): The dictionary returned by build_ngram_counts.
+        entropy_rate (float): The entropy rate (H) calculated by a function
+                              like calculate_entropy_from_counts.
+
+    Returns:
+        float: The redundancy (R) in bits/token.
+    """
+    vocab_size = get_vocabulary_size(counts)
+
+    if vocab_size <= 1:
+        # Cannot calculate H_max if vocab is 0 or 1
+        return 0.0
+
+    # Max Entropy H_max = log2(V)
+    H_max = math.log2(vocab_size)
+
+    # Redundancy R = H_max - H
+    redundancy = H_max - entropy_rate
+
+    # Redundancy is often expressed as a percentage of H_max: R/H_max
+    # Redundancy_percent = (redundancy / H_max) * 100
+
+    print("\n----- Redundancy Calculation (Based on N-gram Model) -----")
+    print(f"Vocabulary Size (V): {vocab_size:,}")
+    print(f"Maximum Entropy (H_max = log2 V): {H_max:.4f} bits/token")
+    print(f"Model Entropy Rate (H): {entropy_rate:.4f} bits/token")
+    print(f"Redundancy (R = H_max - H): {redundancy:.4f} bits/token")
+    print(f"Redundancy Ratio (R / H_max): {redundancy / H_max:.4f}")
+
+    return redundancy
