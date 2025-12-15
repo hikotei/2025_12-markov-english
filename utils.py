@@ -11,113 +11,59 @@ def load_text(filepath):
         return f.read()
 
 
-# ORIGINAL
-# def clean_text(text, level="char", keep_punctuation=False):
-#     """
-#     Preprocesses text.
-#     level: 'char' or 'word'
-#     keep_punctuation: bool
-#     Returns: list of tokens
-#     """
-#     text = text.lower()
-
-#     # Define allowed characters
-#     if keep_punctuation:
-#         # Allow letters, numbers, and standard punctuation
-#         # For simplicity, let's keep basic ascii punctuation and spaces
-#         allowed = set(
-#             string.ascii_lowercase + string.digits + string.punctuation + " \n\t"
-#         )
-#     else:
-#         # Strict: only a-z and space
-#         allowed = set(string.ascii_lowercase + " ")
-#         text = text.replace("\n", " ").replace(
-#             "\t", " "
-#         )  # normalize whitespace for strict mode
-
-#     # Filter characters for both modes initially to clean up weird stuff
-#     # But for word mode, we might want to do regex split instead
-
-#     if level == "char":
-#         # Filter char by char
-#         cleaned = [c for c in text if c in allowed]
-#         # Collapse multiple spaces if strict? The user didn't say, but it helps coherence.
-#         # Let's just join them.
-#         cleaned_str = "".join(cleaned)
-#         if not keep_punctuation:
-#             cleaned_str = re.sub(r"\s+", " ", cleaned_str).strip()
-#         return list(cleaned_str)
-
-#     elif level == "word":
-#         if keep_punctuation:
-#             # Tokenize: words and punctuation are separate tokens
-#             # regex: capture words or non-whitespace characters
-#             # This is a simple tokenizer
-#             tokens = re.findall(r"[\w']+|[.,!?;:]", text)
-#             return tokens
-#         else:
-#             # Remove punctuation, split by whitespace
-#             # First replace punctuation with nothing (or space?)
-#             # Usually strict word model removes punctuation.
-#             cleaned_str = re.sub(r"[^a-z\s]", "", text)
-#             tokens = cleaned_str.split()
-#             return tokens
-
-#     return []
-
 # REVISED to keep linebreaks
-# def clean_text(text, level="char", keep_punctuation=False):
-#     """
-#     Preprocesses text.
-#     level: 'char' or 'word'
-#     keep_punctuation: bool
-#     Returns: list of tokens
-#     """
-#     text = text.lower()
+def clean_text(text, level="char", keep_punctuation=False):
+    """
+    Preprocesses text.
+    level: 'char' or 'word'
+    keep_punctuation: bool
+    Returns: list of tokens
+    """
+    text = text.lower()
 
-#     # Define allowed characters
-#     if keep_punctuation:
-#         # Allow letters, numbers, and standard punctuation, plus \n and \t
-#         allowed = set(
-#             string.ascii_lowercase + string.digits + string.punctuation + " \n\t"
-#         )
-#     else:
-#         # Strict: only a-z and space
-#         allowed = set(string.ascii_lowercase + " ")
-#         text = text.replace("\n", " ").replace(
-#             "\t", " "
-#         )  # normalize whitespace for strict mode
+    # Define allowed characters
+    if keep_punctuation:
+        # Allow letters, numbers, and standard punctuation, plus \n and \t
+        allowed = set(
+            string.ascii_lowercase + string.digits + string.punctuation + " \n\t"
+        )
+    else:
+        # Strict: only a-z and space
+        allowed = set(string.ascii_lowercase + " ")
+        text = text.replace("\n", " ").replace(
+            "\t", " "
+        )  # normalize whitespace for strict mode
 
-#     if level == "char":
-#         cleaned = [c for c in text if c in allowed]
+    if level == "char":
+        cleaned = [c for c in text if c in allowed]
 
-#         if keep_punctuation:
-#             # FIX: Preserve all characters as tokens, including \n and \t, by returning the list directly
-#             return cleaned
-#         else:
-#             # For strict char mode, join and then normalize spaces
-#             cleaned_str = "".join(cleaned)
-#             cleaned_str = re.sub(r"\s+", " ", cleaned_str).strip()
-#             return list(cleaned_str)
+        if keep_punctuation:
+            # FIX: Preserve all characters as tokens, including \n and \t, by returning the list directly
+            return cleaned
+        else:
+            # For strict char mode, join and then normalize spaces
+            cleaned_str = "".join(cleaned)
+            cleaned_str = re.sub(r"\s+", " ", cleaned_str).strip()
+            return list(cleaned_str)
 
-#     elif level == "word":
-#         if keep_punctuation:
-#             # FIX: Explicitly include \n and \t as distinct tokens in the regex capture group
-#             text = text.replace(
-#                 "\t", "\n"
-#             )  # Treat tabs like newlines for simplicity in modeling breaks
+    elif level == "word":
+        if keep_punctuation:
+            # FIX: Explicitly include \n and \t as distinct tokens in the regex capture group
+            text = text.replace(
+                "\t", "\n"
+            )  # Treat tabs like newlines for simplicity in modeling breaks
 
-#             # The pattern is: [Words] OR [\n] OR [Other Punctuation]
-#             tokens = re.findall(r"[\w']+|\n|[.,!?;:\"()]", text)
+            # The pattern is: [Words] OR [\n] OR [Other Punctuation]
+            tokens = re.findall(r"[\w']+|\n|[.,!?;:\"()]", text)
 
-#             return tokens
-#         else:
-#             # Strict word mode: remove punctuation, split by whitespace
-#             cleaned_str = re.sub(r"[^a-z\s]", "", text)
-#             tokens = cleaned_str.split()
-#             return tokens
+            return tokens
+        else:
+            # Strict word mode: remove punctuation, split by whitespace
+            cleaned_str = re.sub(r"[^a-z\s]", "", text)
+            tokens = cleaned_str.split()
+            return tokens
 
-#     return []
+    return []
 
 
 # Helper function for simplification
@@ -130,83 +76,83 @@ def simplify_newlines(text):
 
 
 # REVISED to only keep simple punctuation . , \n
-def clean_text(text, level="char", keep_punctuation=False):
-    """
-    Preprocesses text.
-    level: 'char' or 'word'
-    keep_punctuation: bool
-    Returns: list of tokens
-    """
-    text = text.lower()
+# def clean_text(text, level="char", keep_punctuation=False):
+#     """
+#     Preprocesses text.
+#     level: 'char' or 'word'
+#     keep_punctuation: bool
+#     Returns: list of tokens
+#     """
+#     text = text.lower()
 
-    # Define the simple punctuation set: . , \n (and space, always)
-    SIMPLE_PUNCTUATION = {".", ",", "\n"}
+#     # Define the simple punctuation set: . , \n (and space, always)
+#     SIMPLE_PUNCTUATION = {".", ",", "\n"}
 
-    # --- Character Level ---
-    if level == "char":
-        if keep_punctuation:
-            # 1. Filtering and cleaning
-            allowed = set(string.ascii_lowercase + string.digits + " \n\t").union(
-                {".", ","}
-            )
-            # Consolidate tabs into newlines
-            text = text.replace("\t", "\n")
+#     # --- Character Level ---
+#     if level == "char":
+#         if keep_punctuation:
+#             # 1. Filtering and cleaning
+#             allowed = set(string.ascii_lowercase + string.digits + " \n\t").union(
+#                 {".", ","}
+#             )
+#             # Consolidate tabs into newlines
+#             text = text.replace("\t", "\n")
 
-            # Filter all characters to only keep allowed ones
-            cleaned = [
-                c
-                for c in text
-                if c in allowed
-                and c not in set(string.punctuation) - SIMPLE_PUNCTUATION
-            ]
+#             # Filter all characters to only keep allowed ones
+#             cleaned = [
+#                 c
+#                 for c in text
+#                 if c in allowed
+#                 and c not in set(string.punctuation) - SIMPLE_PUNCTUATION
+#             ]
 
-            # 2. Simplification of multiple newlines
-            cleaned_str = "".join(cleaned)
-            cleaned_str = simplify_newlines(
-                cleaned_str
-            )  # <<< NEWLINE SIMPLIFICATION APPLIED HERE
+#             # 2. Simplification of multiple newlines
+#             cleaned_str = "".join(cleaned)
+#             cleaned_str = simplify_newlines(
+#                 cleaned_str
+#             )  # <<< NEWLINE SIMPLIFICATION APPLIED HERE
 
-            # Return the list of characters directly, preserving '\n' as a token
-            return list(cleaned_str)  # Convert back to list of character tokens
+#             # Return the list of characters directly, preserving '\n' as a token
+#             return list(cleaned_str)  # Convert back to list of character tokens
 
-        else:
-            # Strict: only a-z and space
-            allowed = set(string.ascii_lowercase + " ")
-            text = text.replace("\n", " ").replace("\t", " ")
-            cleaned = [c for c in text if c in allowed]
-            cleaned_str = "".join(cleaned)
-            cleaned_str = re.sub(r"\s+", " ", cleaned_str).strip()
-            return list(cleaned_str)
+#         else:
+#             # Strict: only a-z and space
+#             allowed = set(string.ascii_lowercase + " ")
+#             text = text.replace("\n", " ").replace("\t", " ")
+#             cleaned = [c for c in text if c in allowed]
+#             cleaned_str = "".join(cleaned)
+#             cleaned_str = re.sub(r"\s+", " ", cleaned_str).strip()
+#             return list(cleaned_str)
 
-    # --- Word Level ---
-    elif level == "word":
-        if keep_punctuation:
-            text = text.lower()
+#     # --- Word Level ---
+#     elif level == "word":
+#         if keep_punctuation:
+#             text = text.lower()
 
-            # B. Remove all punctuation *except* . and ,
-            all_punc_to_remove = set(string.punctuation) - {".", ","}
-            punc_pattern = r"[" + re.escape("".join(all_punc_to_remove)) + r"]"
-            text = re.sub(punc_pattern, " ", text)
+#             # B. Remove all punctuation *except* . and ,
+#             all_punc_to_remove = set(string.punctuation) - {".", ","}
+#             punc_pattern = r"[" + re.escape("".join(all_punc_to_remove)) + r"]"
+#             text = re.sub(punc_pattern, " ", text)
 
-            # C. Replace all tabs with a single space (or \n if you want to model \t as \n)
-            text = text.replace("\t", " ")
+#             # C. Replace all tabs with a single space (or \n if you want to model \t as \n)
+#             text = text.replace("\t", " ")
 
-            # 1. Simplification of multiple newlines
-            text = simplify_newlines(text)  # <<< NEWLINE SIMPLIFICATION APPLIED HERE
+#             # 1. Simplification of multiple newlines
+#             text = simplify_newlines(text)  # <<< NEWLINE SIMPLIFICATION APPLIED HERE
 
-            # D. Use findall to explicitly capture our desired tokens.
-            tokens = re.findall(r"[\w']+|\n|\.|\,", text)
+#             # D. Use findall to explicitly capture our desired tokens.
+#             tokens = re.findall(r"[\w']+|\n|\.|\,", text)
 
-            # E. Filter out any remaining single space tokens or empty strings that might result from the regex
-            return [t for t in tokens if t.strip() or t == "\n"]
+#             # E. Filter out any remaining single space tokens or empty strings that might result from the regex
+#             return [t for t in tokens if t.strip() or t == "\n"]
 
-        else:
-            # Strict word mode: remove punctuation, split by whitespace
-            cleaned_str = re.sub(r"[^a-z\s]", "", text)
-            tokens = cleaned_str.split()
-            return tokens
+#         else:
+#             # Strict word mode: remove punctuation, split by whitespace
+#             cleaned_str = re.sub(r"[^a-z\s]", "", text)
+#             tokens = cleaned_str.split()
+#             return tokens
 
-    return []
+#     return []
 
 
 def split_chapters(text):
