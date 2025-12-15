@@ -2,8 +2,8 @@ import re
 import math
 import zlib
 import time
-import string
 import jieba
+import string
 import random
 import collections
 from tqdm import tqdm
@@ -14,182 +14,20 @@ def load_text(filepath):
         return f.read()
 
 
-# REVISED to keep linebreaks
-def clean_text(text, level="char", keep_punctuation=False):
-    """
-    Preprocesses text.
-    level: 'char' or 'word'
-    keep_punctuation: bool
-    Returns: list of tokens
-    """
-    text = text.lower()
-
-    # Define allowed characters
-    if keep_punctuation:
-        # Allow letters, numbers, and standard punctuation, plus \n and \t
-        allowed = set(
-            string.ascii_lowercase + string.digits + string.punctuation + " \n\t"
-        )
-    else:
-        # Strict: only a-z and space
-        allowed = set(string.ascii_lowercase + " ")
-        text = text.replace("\n", " ").replace(
-            "\t", " "
-        )  # normalize whitespace for strict mode
-
-    if level == "char":
-        cleaned = [c for c in text if c in allowed]
-
-        if keep_punctuation:
-            # FIX: Preserve all characters as tokens, including \n and \t, by returning the list directly
-            return cleaned
-        else:
-            # For strict char mode, join and then normalize spaces
-            cleaned_str = "".join(cleaned)
-            cleaned_str = re.sub(r"\s+", " ", cleaned_str).strip()
-            return list(cleaned_str)
-
-    elif level == "word":
-        if keep_punctuation:
-            # FIX: Explicitly include \n and \t as distinct tokens in the regex capture group
-            text = text.replace(
-                "\t", "\n"
-            )  # Treat tabs like newlines for simplicity in modeling breaks
-
-            # The pattern is: [Words] OR [\n] OR [Other Punctuation]
-            tokens = re.findall(r"[\w']+|\n|[.,!?;:\"()]", text)
-
-            return tokens
-        else:
-            # Strict word mode: remove punctuation, split by whitespace
-            cleaned_str = re.sub(r"[^a-z\s]", "", text)
-            tokens = cleaned_str.split()
-            return tokens
-
-    return []
-
-
+# HELPER FUNCTIONS
 def is_han(char):
     """Checks if a character is a CJK Unified Ideograph."""
-    return '\u4e00' <= char <= '\u9fff'
+    return "\u4e00" <= char <= "\u9fff"
 
 
-def clean_text_cn(text, level="char", keep_punctuation=False):
+def simplify_whitespace(text):
     """
-    Preprocesses Chinese text.
-    level: 'char' or 'word'
-    keep_punctuation: bool
-    Returns: list of tokens
+    Consolidates multiple spaces into one, and multiple newlines into one.
+    Also ensures space doesn't exist around newlines for cleanliness.
     """
-    if level == "char":
-        if keep_punctuation:
-            # Keep all characters including punctuation and whitespace
-            return list(text)
-        else:
-            # Strict mode: Only Han characters
-            return [c for c in text if is_han(c)]
-
-    elif level == "word":
-        # Use jieba for segmentation
-        tokens = jieba.lcut(text)
-
-        if keep_punctuation:
-            # Keep all tokens
-            return tokens
-        else:
-            # Strict mode: Filter to keep only tokens containing at least one Han character
-            return [token for token in tokens if any(is_han(c) for c in token)]
-
-    return []
-
-
-# Helper function for simplification
-def simplify_newlines(text):
-    """
-    Replaces sequences of one or more newline characters (\n) with a single newline.
-    """
-    # This regex substitutes two or more newlines with a single newline.
-    return re.sub(r"\n+", "\n", text)
-
-
-# REVISED to only keep simple punctuation . , \n
-# def clean_text(text, level="char", keep_punctuation=False):
-#     """
-#     Preprocesses text.
-#     level: 'char' or 'word'
-#     keep_punctuation: bool
-#     Returns: list of tokens
-#     """
-#     text = text.lower()
-
-#     # Define the simple punctuation set: . , \n (and space, always)
-#     SIMPLE_PUNCTUATION = {".", ",", "\n"}
-
-#     # --- Character Level ---
-#     if level == "char":
-#         if keep_punctuation:
-#             # 1. Filtering and cleaning
-#             allowed = set(string.ascii_lowercase + string.digits + " \n\t").union(
-#                 {".", ","}
-#             )
-#             # Consolidate tabs into newlines
-#             text = text.replace("\t", "\n")
-
-#             # Filter all characters to only keep allowed ones
-#             cleaned = [
-#                 c
-#                 for c in text
-#                 if c in allowed
-#                 and c not in set(string.punctuation) - SIMPLE_PUNCTUATION
-#             ]
-
-#             # 2. Simplification of multiple newlines
-#             cleaned_str = "".join(cleaned)
-#             cleaned_str = simplify_newlines(
-#                 cleaned_str
-#             )  # <<< NEWLINE SIMPLIFICATION APPLIED HERE
-
-#             # Return the list of characters directly, preserving '\n' as a token
-#             return list(cleaned_str)  # Convert back to list of character tokens
-
-#         else:
-#             # Strict: only a-z and space
-#             allowed = set(string.ascii_lowercase + " ")
-#             text = text.replace("\n", " ").replace("\t", " ")
-#             cleaned = [c for c in text if c in allowed]
-#             cleaned_str = "".join(cleaned)
-#             cleaned_str = re.sub(r"\s+", " ", cleaned_str).strip()
-#             return list(cleaned_str)
-
-#     # --- Word Level ---
-#     elif level == "word":
-#         if keep_punctuation:
-#             text = text.lower()
-
-#             # B. Remove all punctuation *except* . and ,
-#             all_punc_to_remove = set(string.punctuation) - {".", ","}
-#             punc_pattern = r"[" + re.escape("".join(all_punc_to_remove)) + r"]"
-#             text = re.sub(punc_pattern, " ", text)
-
-#             # C. Replace all tabs with a single space (or \n if you want to model \t as \n)
-#             text = text.replace("\t", " ")
-
-#             # 1. Simplification of multiple newlines
-#             text = simplify_newlines(text)  # <<< NEWLINE SIMPLIFICATION APPLIED HERE
-
-#             # D. Use findall to explicitly capture our desired tokens.
-#             tokens = re.findall(r"[\w']+|\n|\.|\,", text)
-
-#             # E. Filter out any remaining single space tokens or empty strings that might result from the regex
-#             return [t for t in tokens if t.strip() or t == "\n"]
-
-#         else:
-#             # Strict word mode: remove punctuation, split by whitespace
-#             cleaned_str = re.sub(r"[^a-z\s]", "", text)
-#             tokens = cleaned_str.split()
-#             return tokens
-
-#     return []
+    text = re.sub(r" +", " ", text)
+    text = re.sub(r"\n+", "\n", text)
+    return text
 
 
 def split_chapters(text):
@@ -220,6 +58,155 @@ def split_chapters(text):
     return chapters
 
 
+# CLEAN TEXT
+def _clean_text_en(text, level, keep_punctuation, keep_whitespace):
+    text = text.lower()
+    text = text.replace("\t", " ")  # Tabs are always spaces
+
+    # 1. Define sets
+    # User requested: . , ? and linebreak
+    SIMPLE_PUNCTUATION = {".", ",", "?", "\n"}
+
+    # drop multiple spaces/newlines
+    text = simplify_whitespace(text)
+
+    # --- Character Level ---
+    if level == "char":
+        # Priority 1: Keep Punctuation
+        if keep_punctuation:
+            # Allow: a-z, space, and simple punctuation
+            # Regex: Keep a-z, space, and chars in SIMPLE_PUNCTUATION. Replace others with space.
+            # We construct regex safe string: \n . , ?
+            text = re.sub(r"[^a-z \n.,?]", " ", text)
+
+            # Simplify and tokenize
+
+            return list(text.strip())
+
+        # Priority 2: Keep Whitespace (No Punctuation)
+        elif keep_whitespace:
+            # Allow: a-z, space ONLY.
+            # Drop ALL punctuation (.,?\n) by replacing with space
+            text = re.sub(r"[^a-z ]", " ", text)
+            return list(text.strip())
+
+        # Priority 3: Strict (No nothing)
+        else:
+            # Allow: a-z ONLY.
+            # We want a continuous stream of characters: "helloworld"
+            # Remove everything that is not a-z
+            text = re.sub(r"[^a-z]", "", text)
+            return list(text)
+
+    # --- Word Level ---
+    elif level == "word":
+        # Priority 1: Keep Punctuation
+        if keep_punctuation:
+            # Punctuation marks become distinct tokens
+            text = re.sub(r"[^a-z \n.,?']", " ", text)  # Keep ' for possessives
+            # Find words OR punctuation tokens
+            tokens = re.findall(r"[\w']+|\n|\.|,|?", text)
+            return tokens
+
+        # Priority 2: Keep Whitespace (No Punctuation)
+        elif keep_whitespace:
+            # Punctuation removed. \n remains as a token.
+            text = re.sub(r"[^a-z \n']", " ", text)
+            # Find words OR newlines
+            tokens = re.findall(r"[\w']+|\n", text)
+            return tokens
+
+        # Priority 3: Strict (Words only)
+        else:
+            # Words only. No \n tokens.
+            text = re.sub(r"[^a-z\s]", "", text)
+            return text.split()
+
+    return []
+
+
+def _clean_text_cn(text, level, keep_punctuation, keep_whitespace):
+    CN_PUNCTUATION = {"。", "，", "？", "\n"}  # Added fullwidth ? (？)
+
+    text = simplify_whitespace(text)
+
+    if level == "char":
+        tokens = list(text)
+        cleaned = []
+
+        for char in tokens:
+            if keep_punctuation:
+                # Priority 1: Han + Space + Punctuation
+                if is_han(char) or char in CN_PUNCTUATION or char == " ":
+                    cleaned.append(char)
+                else:
+                    cleaned.append(" ")  # Replace unknowns with space
+
+            elif keep_whitespace:
+                # Priority 2: Han + Space + \n (No Punc)
+                if is_han(char) or char in {" ", "\n"}:
+                    cleaned.append(char)
+                else:
+                    cleaned.append(" ")
+
+            else:
+                # Priority 3: Han Only
+                if is_han(char):
+                    cleaned.append(char)
+
+        # Post-processing for 1 and 2
+        if keep_punctuation or keep_whitespace:
+            res = "".join(cleaned)
+            return list(res.strip())
+        else:
+            return cleaned
+
+    elif level == "word":
+        tokens = jieba.lcut(text)
+        cleaned = []
+
+        for token in tokens:
+            has_han = any(is_han(c) for c in token)
+
+            if keep_punctuation:
+                if has_han or token in CN_PUNCTUATION:
+                    cleaned.append(token)
+
+            elif keep_whitespace:
+                # Keep words and newlines only
+                if has_han or "\n" in token:
+                    # Clean punctuation out of mixed tokens if necessary,
+                    # but usually jieba separates them.
+                    cleaned.append(token if token == "\n" else token.strip())
+
+            else:
+                # Keep words only
+                if has_han:
+                    cleaned.append(token)
+
+        return cleaned
+
+    return []
+
+
+def clean_text(
+    text, level="char", keep_punctuation=False, keep_whitespace=True, lang="en"
+):
+    """
+    Unified preprocessing function.
+
+    Priority Logic:
+    1. keep_punctuation=True -> Keeps words + space + {.,?\n}
+    2. keep_whitespace=True -> Keeps words + space + {\n} (No punctuation)
+    3. Both False          -> Keeps words/chars only (No space, no \n, no punctuation)
+    """
+    if lang == "cn":
+        return _clean_text_cn(text, level, keep_punctuation, keep_whitespace)
+    else:
+        return _clean_text_en(text, level, keep_punctuation, keep_whitespace)
+
+
+# N-GRAM MODELING FUNCTIONS
 def build_ngram_counts(tokens, order, show_pb=False, print_stats=False):
     """
     Builds counts of next_token given context of size 'order'.
@@ -297,27 +284,19 @@ def print_model_statistics(counts, order, elapsed=None):
     # Number of unique N-grams (V_N): the number of unique (context, next_token) pairs
     unique_n_grams = sum(len(counter) for counter in counts.values())
 
-    # Prepare statistics for printing
-    stats = [
-        ("Order of N-gram Model (N)", order),
-        ("Computation Time (s)", round(elapsed, 3) if elapsed is not None else "N/A"),
-        ("Number of Unique Contexts", num_contexts),
-        ("Total Observed N-grams (Transitions)", total_observations),
-        ("Unique (Context, Token) N-grams", unique_n_grams),
-        ("Conditional Vocab Size (Next Tokens)", conditional_vocab_size),
-    ]
-
-    # Find the max len of the label strings for alignment
-    max_label_len = max(len(label) for label, _ in stats) + 1
-
+    max_len = 40
     print("\n----- Model Statistics -----")
-    # 3. Print the statistics using f-string padding and formatting
-    for label, value in stats:
-        # Use < for left alignment of the label, padded to max_label_len
-        # Use :, for comma separated thousands for the value
-        # Using LaTeX for labels as requested in your profile
-        # Use an f-string for the whole output
-        print(f"{label:<{max_label_len}}: {value:,}")
+    print(f"{'Order of N-gram Model (N)':<{max_len}}: {order:,}")
+    if elapsed is not None:
+        print(f"{'Computation Time (s)':<{max_len}}: {elapsed:.4f}")
+    print(f"{'Number of Unique Contexts:':<{max_len}}: {num_contexts:,}")
+    print(
+        f"{'Total Observed N-grams (Transitions)':<{max_len}}: {total_observations:,}"
+    )
+    print(f"{'Unique (Context, Token) N-grams':<{max_len}}: {unique_n_grams:,}")
+    print(
+        f"{'Conditional Vocab Size (Next Tokens)':<{max_len}}: {conditional_vocab_size:,}"
+    )
 
 
 def generate_text(model, order, length, seed_context=None):
@@ -444,6 +423,7 @@ def calculate_nll(sequence, model, order, eps=1e-10):
     return -log_prob_sum / n
 
 
+# OTHERS
 def calculate_gzip_ratio(original_text):
     """
     Returns compressed_size / original_size
